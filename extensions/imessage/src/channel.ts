@@ -21,6 +21,7 @@ import {
   resolveAllowlistProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   setAccountEnabledInConfigSection,
+  stripMarkdown,
   type ChannelPlugin,
   type ResolvedIMessageAccount,
 } from "openclaw/plugin-sdk";
@@ -200,7 +201,9 @@ export const imessagePlugin: ChannelPlugin<ResolvedIMessageAccount> = {
           cfg.channels?.imessage?.mediaMaxMb,
         accountId,
       });
-      const result = await send(to, text, {
+      // Strip markdown formatting for iMessage (doesn't support markdown)
+      const plainText = stripMarkdown(text);
+      const result = await send(to, plainText, {
         maxBytes,
         accountId: accountId ?? undefined,
         replyToId: replyToId ?? undefined,
@@ -216,7 +219,9 @@ export const imessagePlugin: ChannelPlugin<ResolvedIMessageAccount> = {
           cfg.channels?.imessage?.mediaMaxMb,
         accountId,
       });
-      const result = await send(to, text, {
+      // Strip markdown formatting for iMessage (doesn't support markdown)
+      const plainText = text ? stripMarkdown(text) : undefined;
+      const result = await send(to, plainText, {
         mediaUrl,
         maxBytes,
         accountId: accountId ?? undefined,
